@@ -1,2 +1,2 @@
 # GraphingTests
-matplotlib,numpy,scipy stuff
+Trying to get peak detection and other stuff working before going into ML
