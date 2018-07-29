@@ -1,7 +1,7 @@
 import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.signal import lfilter
+from scipy.signal import lfilter, _peak_finding as pf
 
 
 def draw_normal_plot(x, y):
@@ -20,15 +20,26 @@ def draw_noise_cancelling(x, y, n):
     b = [1.0 / n] * n
     yprime = lfilter(b, 1, y)
     plt.figure(3)
-    plt.plot(x, yprime, marker='v', markevery=np.ndarray.tolist(find_local_maxs(x, yprime)))
+    maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
+    print(maxs)
+    plt.plot(x, yprime, marker='v', markevery=maxs)
     plt.show()
 
 
 def find_local_maxs(x, y):
     maxs = np.array([0])
-    for r in range(2, x.size):
-        if y[r] < y[r - 1] and y[r - 1] > y[r - 2]:
-            maxs = np.append(maxs, r)
+    r = 1
+    while r < x.size:
+        if y[r] < y[r - 20] and y[r - 20] > y[r - 40]:
+            maxs = np.append(maxs, r - 1)
+            r += 200     # ~r/10 wavelengths skipped
+        else:
+            r += 1
+    maxs = np.delete(maxs, [0])
+#    ext = pf.argrelextrema(y, np.greater)
+#    extrema = np.array(ext)
+#    print(extrema)
+#    return extrema
     print(maxs)
     return maxs
 
@@ -47,4 +58,4 @@ if __name__ == '__main__':
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
     draw_normal_plot(wavelengths, intensities)
     draw_scatter_graph(wavelengths, intensities)
-    draw_noise_cancelling(wavelengths, intensities, 40)
+    draw_noise_cancelling(wavelengths, intensities, 25)
