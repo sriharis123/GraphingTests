@@ -6,7 +6,8 @@ from scipy import signal as sg
 
 def draw_normal_plot(x, y):
     plt.figure(1)
-    plt.plot(x, y)
+    maxs = np.ndarray.tolist(find_local_maxs(x, y))
+    plt.plot(x, y, marker='v', markevery=maxs)
     plt.show(block=False)
 
 
@@ -34,20 +35,22 @@ def draw_savitzky_golay(x, y):
 
 def find_local_maxs(x, y):
     maxs = np.array([0])
-    r = 1
+    peak_radius = 200   # checks if this is the greatest value in 200 data points [~20 wavelengths]
+    skip = 200          # skips this number of data points after a peak is found
+    r = 1               # not sure why this doesnt throw an index out of bounds exception
     while r < x.size:
-        if y[r] < y[r - 200] and y[r - 200] > y[r - 400]:
-            c = r - 199
+        if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]:
+            c = r - peak_radius + 1
             append = True
-            while c < r:
-                if y[c] > y[r - 200]:
-                    append = False
+            while c < r:    # go through the next 200 data points to make sure there isn't a value higher than this.
+                if y[c] > y[r - peak_radius]:
+                    append = False  # if there is a higher value, break the loop and continue searching
                     break
                 else:
-                    c += 1
+                    c += 1  # continue looking until it reaches r
             if append:
-                maxs = np.append(maxs, r - 200)
-                r += 200     # ~r/10 wavelengths skipped
+                maxs = np.append(maxs, r - peak_radius)
+                r += skip     # ~r/10 wavelengths skipped and search for next peak begins
             else:
                 r += 1
         else:
@@ -148,6 +151,4 @@ if __name__ == '__main__':
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
     draw_normal_plot(wavelengths, intensities)
-    draw_scatter_graph(wavelengths, intensities)
-    draw_noise_cancelling(wavelengths, intensities, 25)
-    draw_savitzky_golay(wavelengths, intensities)
+    draw_savitzky_golay(wavelengths, intensities) #should be last, break=True, so program wont end.
