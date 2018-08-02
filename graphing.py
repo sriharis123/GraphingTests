@@ -137,8 +137,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\\20180423 WS2_2_2 a.spe')
-
+    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\\20180423 WS2_2.spe')
     wavelengths = data[0]
     intensities = data[1]
 

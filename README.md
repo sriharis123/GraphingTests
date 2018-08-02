@@ -1,2 +1,4 @@
 # GraphingTests
-Trying to get peak detection and other stuff working before going into ML
+## Description
+Working with Peak detection in python using scipy, numpy, and the Savitzky Golay function.
+This is my test repository for some stuff before going to https://github.com/aboehmke/Machine-Learning-for-Bio-inspired-Photonics
