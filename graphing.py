@@ -1,7 +1,7 @@
 import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.signal import lfilter, _peak_finding as pf
+from scipy import signal as sg
 
 
 def draw_normal_plot(x, y):
@@ -18,7 +18,7 @@ def draw_scatter_graph(x, y):
 
 def draw_noise_cancelling(x, y, n):
     b = [1.0 / n] * n
-    yprime = lfilter(b, 1, y)
+    yprime = sg.lfilter(b, 1, y)
     plt.figure(3)
     maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
     plt.plot(x, yprime, marker='v', markevery=maxs)
@@ -26,7 +26,7 @@ def draw_noise_cancelling(x, y, n):
 
 
 def draw_savitzky_golay(x, y):
-    yprime = savitzky_golay(y, 31, 6, 0)
+    yprime = savitzky_golay(y, 31, 10, 0)
     plt.figure(4)
     maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
     plt.plot(x, yprime, marker='v', markevery=maxs)
@@ -36,9 +36,20 @@ def find_local_maxs(x, y):
     maxs = np.array([0])
     r = 1
     while r < x.size:
-        if y[r] < y[r - 20] and y[r - 20] > y[r - 40]:
-            maxs = np.append(maxs, r - 20)
-            r += 200     # ~r/10 wavelengths skipped
+        if y[r] < y[r - 200] and y[r - 200] > y[r - 400]:
+            c = r - 199
+            append = True
+            while c < r:
+                if y[c] > y[r - 200]:
+                    append = False
+                    break
+                else:
+                    c += 1
+            if append:
+                maxs = np.append(maxs, r - 200)
+                r += 200     # ~r/10 wavelengths skipped
+            else:
+                r += 1
         else:
             r += 1
     maxs = np.delete(maxs, [0])
@@ -46,17 +57,9 @@ def find_local_maxs(x, y):
 #    extrema = np.array(ext)
 #    print(extrema)
 #    return extrema
+    #maxs = sg.find_peaks_cwt(y, np.arange(1, 1000))
     print(maxs)
     return maxs
-
-
-def find_derivative(x, y):
-    xprime = np.array([0])
-    for i in range(0, x.size - 1):
-        deriv = ((y[i + 1] - y[i]) / (x[i + 1] - x[i]))
-        xprime = np.append(xprime, deriv)
-    #xprime = np.delete(xprime, [0])
-    return xprime
 
 
 # http://scipy-cookbook.readthedocs.io/items/SavitzkyGolay.html
@@ -134,7 +137,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\\20180404 WS2_1_4.spe')
+    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\\20180423 WS2_2_2 a.spe')
 
     wavelengths = data[0]
     intensities = data[1]
