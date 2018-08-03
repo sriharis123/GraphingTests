@@ -5,36 +5,40 @@ from scipy import signal as sg
 
 
 def draw_normal_plot(x, y):
+    '''
+    Draws a normal plot. Make sure x and y are numpy arrays of the same size
+    :param x: List of x-axis points
+    :param y: List of y-axis points
+    :return: N/A
+    '''
     plt.figure(1)
     maxs = np.ndarray.tolist(find_local_maxs(x, y))
     plt.plot(x, y, marker='v', markevery=maxs)
     plt.show(block=False)
 
 
-def draw_scatter_graph(x, y):
-    plt.figure(2)
-    plt.scatter(x, y, s=1, alpha=0.10, marker='o')
-    plt.show(block=False)
-
-
-def draw_noise_cancelling(x, y, n):
-    '''always write a description of what your function does, including parameters it takes and what it returns.'''
-    b = [1.0 / n] * n
-    yprime = sg.lfilter(b, 1, y)
-    plt.figure(3)
-    maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
-    plt.plot(x, yprime, marker='v', markevery=maxs)
-    plt.show(block=False)
-
-
 def draw_savitzky_golay(x, y):
+    '''
+    Draws a noise-cancelled function using the Savitzky Golay function
+    :param x: List of x-axis points
+    :param y: List of y-axis points
+    :return: N/A
+    '''
     yprime = savitzky_golay(y, 31, 10, 0)
     plt.figure(4)
     maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
     plt.plot(x, yprime, marker='v', markevery=maxs)
     plt.show()
 
+
 def find_local_maxs(x, y, pradius=200):
+    '''
+    Finds relative maxs in the list of y points.
+    :param x: List of x-axis points
+    :param y: List of y-axis points
+    :param pradius: A peak will occur in +-pradius of a certain point.
+    :return: A numpy array of each max's x-axis point
+    '''
     maxs = np.array([0]) 
     # peak_radius and skip assume the shape of the data. though they're not terrible assumptions,
     #       in this case we can assume something about the underlying physics.
