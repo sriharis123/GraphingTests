@@ -18,7 +18,7 @@ def draw_scatter_graph(x, y):
 
 
 def draw_noise_cancelling(x, y, n):
-    '''always write a description of what your function does, including parameters it take and what it returns.'''
+    '''always write a description of what your function does, including parameters it takes and what it returns.'''
     b = [1.0 / n] * n
     yprime = sg.lfilter(b, 1, y)
     plt.figure(3)
@@ -45,6 +45,9 @@ def find_local_maxs(x, y):
     while r < x.size: # since x is a 1xm array, you could use len(x), that way if x isn't 1xm you'll know b/c you'd get an error 
         if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]: # (r - peak_radius) will be a negative number while r<200. 
             # this will start indexing from the end of y. maybe take the absolute value of the difference? 
+            
+            # check out https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.amax.html#numpy.amax 
+            
             c = r - peak_radius + 1
             append = True # you may not want to use a method name as a variable name.
             while c < r:    # go through the next 200 data points to make sure there isn't a value higher than this.
