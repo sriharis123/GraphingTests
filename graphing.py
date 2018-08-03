@@ -36,27 +36,30 @@ def draw_savitzky_golay(x, y):
 
 def find_local_maxs(x, y):
     maxs = np.array([0]) 
-    # peak_radius and skip assume the shape of the data. though they're not terrible assumptions, in this case we can assume something about the underlying physics.
-    # since you're looking for distance btwn A and B exciton peaks, you can assume that the peaks will be within some range of their known positions.
+    # peak_radius and skip assume the shape of the data. though they're not terrible assumptions,
+    #       in this case we can assume something about the underlying physics.
+    # since you're looking for distance btwn A and B exciton peaks, you can assume that the peaks
+    #       will be within some range of their known positions.
     # maybe start from there, instead of assuming that the peaks are >20 nm apart
-    peak_radius = 200   # checks if this is the greatest value in 200 data points [~20 nanometers]
-    skip = 200          # skips this number of data points after a peak is found
-    r = 1               # why aren't you starting at 0?
-    while r < x.size: # since x is a 1xm array, you could use len(x), that way if x isn't 1xm you'll know b/c you'd get an error 
-        if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]: # (r - peak_radius) will be a negative number while r<200. 
+    peak_radius = 200       # checks if this is the greatest value in 200 data points [~20 nanometers]
+    skip = peak_radius      # skips this number of data points after a peak is found
+    r = 0                   # why aren't you starting at 0?
+    while r < len(x):
+        if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]:
+            # (r - peak_radius) will be a negative number while r<200. [Doesn't give runtime error]
             # this will start indexing from the end of y. maybe take the absolute value of the difference? 
             
             # check out https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.amax.html#numpy.amax 
             
             c = r - peak_radius + 1
-            append = True # you may not want to use a method name as a variable name.
+            add_as_max = True
             while c < r:    # go through the next 200 data points to make sure there isn't a value higher than this.
                 if y[c] > y[r - peak_radius]:
-                    append = False  # if there is a higher value, break the loop and continue searching
+                    add_as_max = False  # if there is a higher value, break the loop and continue searching
                     break
                 else:
                     c += 1  # continue looking until it reaches r
-            if append:
+            if add_as_max:
                 maxs = np.append(maxs, r - peak_radius)
                 r += skip     # ~r/10 wavelengths skipped and search for next peak begins
             else:
@@ -64,11 +67,6 @@ def find_local_maxs(x, y):
         else:
             r += 1
     maxs = np.delete(maxs, [0])
-#    ext = pf.argrelextrema(y, np.greater)
-#    extrema = np.array(ext)
-#    print(extrema)
-#    return extrema
-    #maxs = sg.find_peaks_cwt(y, np.arange(1, 1000))
     print(maxs)
     return maxs
 
@@ -148,7 +146,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\20180423 WS2_2.spe')
+    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\\20180423 WS2_2.spe')
     wavelengths = data[0]
     intensities = data[1]
 
