@@ -41,9 +41,10 @@ def find_local_maxs(x, y):
     skip = 200          # skips this number of data points after a peak is found
     r = 1               # why aren't you starting at 0?
     while r < x.size: # since x is a 1xm array, you could use len(x), that way if x isn't 1xm you'll know b/c you'd get an error 
-        if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]: # (r - peak_radius) will be a negative number...
+        if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]: # (r - peak_radius) will be a negative number while r<200. 
+            # this will start indexing from the end of y. maybe take the absolute value of the difference? 
             c = r - peak_radius + 1
-            append = True
+            append = True # you may not want to use a method name as a variable name.
             while c < r:    # go through the next 200 data points to make sure there isn't a value higher than this.
                 if y[c] > y[r - peak_radius]:
                     append = False  # if there is a higher value, break the loop and continue searching
