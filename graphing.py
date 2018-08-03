@@ -42,11 +42,10 @@ def find_local_maxs(x, y):
     #       will be within some range of their known positions.
     # maybe start from there, instead of assuming that the peaks are >20 nm apart
     peak_radius = 200       # checks if this is the greatest value in 200 data points [~20 nanometers]
-    skip = peak_radius      # skips this number of data points after a peak is found
     r = 0                   # why aren't you starting at 0?
     while r < len(x):
         if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]:
-            # (r - peak_radius) will be a negative number while r<200. [Doesn't give runtime error]
+            # (r - peak_radius) will be a negative number while r<200. [Doesn't give runtime error??]
             # this will start indexing from the end of y. maybe take the absolute value of the difference? 
             
             # check out https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.amax.html#numpy.amax 
@@ -61,7 +60,7 @@ def find_local_maxs(x, y):
                     c += 1  # continue looking until it reaches r
             if add_as_max:
                 maxs = np.append(maxs, r - peak_radius)
-                r += skip     # ~r/10 wavelengths skipped and search for next peak begins
+                r += peak_radius     # continue looking again after the edge of the peak radius
             else:
                 r += 1
         else:
