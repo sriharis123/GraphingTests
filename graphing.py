@@ -36,8 +36,10 @@ def draw_savitzky_golay(x, y):
 
 def find_local_maxs(x, y):
     maxs = np.array([0]) 
-    # peak_radius and skip assume a lot about the shape of the data
-    peak_radius = 200   # checks if this is the greatest value in 200 data points [~20 wavelengths]
+    # peak_radius and skip assume the shape of the data. though they're not terrible assumptions, in this case we can assume something about the underlying physics.
+    # since you're looking for distance btwn A and B exciton peaks, you can assume that the peaks will be within some range of their known positions.
+    # maybe start from there, instead of assuming that the peaks are >20 nm apart
+    peak_radius = 200   # checks if this is the greatest value in 200 data points [~20 nanometers]
     skip = 200          # skips this number of data points after a peak is found
     r = 1               # why aren't you starting at 0?
     while r < x.size: # since x is a 1xm array, you could use len(x), that way if x isn't 1xm you'll know b/c you'd get an error 
@@ -143,7 +145,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\\20180423 WS2_2.spe')
+    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\20180423 WS2_2.spe')
     wavelengths = data[0]
     intensities = data[1]
 
