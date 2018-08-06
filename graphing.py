@@ -1,7 +1,6 @@
 import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy import signal as sg
 
 
 def draw_normal_plot(x, y):
@@ -41,7 +40,7 @@ def find_local_maxs(x, y, pradius=200):
     '''
     maxs = np.array([0]) 
     # peak_radius and skip assume the shape of the data. though they're not terrible assumptions,
-    #       in this case we can assume something about the underlying physics.
+    #       in this case we can assume something about the underlying physics. [Change made - now an argument]
     # since you're looking for distance btwn A and B exciton peaks, you can assume that the peaks
     #       will be within some range of their known positions.
     # maybe start from there, instead of assuming that the peaks are >20 nm apart
