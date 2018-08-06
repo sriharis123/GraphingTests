@@ -1,6 +1,7 @@
 import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
+from os import path as path
 
 
 def draw_normal_plot(x, y):
@@ -148,7 +149,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load('Data\WS2 reflection spectra[130]\WS2 reflection spectra\\20180423 WS2_2.spe')
+    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180423 WS2_2.spe'))
     wavelengths = data[0]
     intensities = data[1]
 
@@ -159,4 +160,4 @@ if __name__ == '__main__':
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
     draw_normal_plot(wavelengths, intensities)
-    draw_savitzky_golay(wavelengths, intensities) #should be last, break=True, so program wont end.
+    draw_savitzky_golay(wavelengths, intensities)
