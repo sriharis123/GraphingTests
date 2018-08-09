@@ -87,25 +87,34 @@ def find_local_maxs_ws2(wavelength, intensity, pradius=35):
     ws2a = 625
     temp_peak = 0
     peak_location = 0
-    r = int(np.trunc(np.average(np.where(np.round(wavelength, decimals=0) == ws2c - pradius)[0])))
-    for i in range(find_index(wavelength, ws2c - pradius), find_index(wavelength, ws2c + pradius)):
-        if intensity[i] > temp_peak:
-            temp_peak = intensity[i]
-            peak_location = i
-    maxs = np.append(maxs, peak_location)
-    temp_peak = 0
-    for i in range(find_index(wavelength, ws2b - pradius), find_index(wavelength, ws2b + pradius)):
-        if intensity[i] > temp_peak:
-            temp_peak = intensity[i]
-            peak_location = i
-    maxs = np.append(maxs, peak_location)
-    temp_peak = 0
-    for i in range(find_index(wavelength, ws2a - pradius), find_index(wavelength, ws2a + pradius)):
-        if intensity[i] > temp_peak:
-            temp_peak = intensity[i]
-            peak_location = i
-    maxs = np.append(maxs, peak_location)
-    maxs = np.delete(maxs, [0])
+    #for i in range(find_index(wavelength, ws2c - pradius), find_index(wavelength, ws2c + pradius)):
+    #    if intensity[i] > temp_peak:
+    #        temp_peak = intensity[i]
+    #        peak_location = i
+    #maxs = np.append(maxs, peak_location)
+    #temp_peak = 0
+    #for i in range(find_index(wavelength, ws2b - pradius), find_index(wavelength, ws2b + pradius)):
+    #    if intensity[i] > temp_peak:
+    #        temp_peak = intensity[i]
+    #        peak_location = i
+    #maxs = np.append(maxs, peak_location)
+    #temp_peak = 0
+    #for i in range(find_index(wavelength, ws2a - pradius), find_index(wavelength, ws2a + pradius)):
+    #    if intensity[i] > temp_peak:
+    #        temp_peak = intensity[i]
+    #        peak_location = i
+    #maxs = np.append(maxs, peak_location)
+    #maxs = np.delete(maxs, [0])
+
+    locus = wavelength[find_index(wavelength, ws2c - pradius):find_index(wavelength, ws2c + pradius)]
+    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+
+    locus = wavelength[find_index(wavelength, ws2b - pradius):find_index(wavelength, ws2b + pradius)]
+    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+
+    locus = wavelength[find_index(wavelength, ws2a - pradius):find_index(wavelength, ws2a + pradius)]
+    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+
     print(maxs)
     return maxs
 
@@ -124,31 +133,18 @@ def find_local_maxs_wse2(wavelength, intensity, pradius=20):
     wse2ap = 575
     wse2b = 610
     wse2a = 760
-    temp_peak = 0
-    peak_location = 0
-    for i in range(find_index(wavelength, wse2bp - pradius), find_index(wavelength, wse2bp + pradius)):
-        if intensity[i] > temp_peak:
-            temp_peak = intensity[i]
-            peak_location = i
-    maxs = np.append(maxs, peak_location)
-    temp_peak = 0
-    for i in range(find_index(wavelength, wse2ap - pradius), find_index(wavelength, wse2ap + pradius)):
-        if intensity[i] > temp_peak:
-            temp_peak = intensity[i]
-            peak_location = i
-    maxs = np.append(maxs, peak_location)
-    temp_peak = 0
-    for i in range(find_index(wavelength, wse2b - pradius), find_index(wavelength, wse2b + pradius)):
-        if intensity[i] > temp_peak:
-            temp_peak = intensity[i]
-            peak_location = i
-    maxs = np.append(maxs, peak_location)
-    temp_peak = 0
-    for i in range(find_index(wavelength, wse2a - pradius), find_index(wavelength, wse2a + pradius)):
-        if intensity[i] > temp_peak:
-            temp_peak = intensity[i]
-            peak_location = i
-    maxs = np.append(maxs, peak_location)
+    locus = wavelength[find_index(wavelength, wse2bp - pradius):find_index(wavelength, wse2bp + pradius)]
+    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+
+    locus = wavelength[find_index(wavelength, wse2ap - pradius):find_index(wavelength, wse2ap + pradius)]
+    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+
+    locus = wavelength[find_index(wavelength, wse2b - pradius):find_index(wavelength, wse2b + pradius)]
+    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+
+    locus = wavelength[find_index(wavelength, wse2a - pradius):find_index(wavelength, wse2a + pradius)]
+    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+
     maxs = np.delete(maxs, [0])
     print(maxs)
     return maxs
