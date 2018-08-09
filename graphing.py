@@ -26,10 +26,15 @@ def draw_savitzky_golay(x, y):
     :return: N/A
     '''
     yprime = savitzky_golay(y, 31, 10, 0)
-    plt.figure(4)
-    maxs = np.ndarray.tolist(find_local_maxs_ws2(x, yprime, 35))
+    plt.figure(2)
+    maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
+    plt.plot(x, yprime, marker='v', markevery=maxs)
+    plt.show(block=False)
+    plt.figure(3)
+    maxs = np.ndarray.tolist(find_local_maxs_ws2(x, yprime))
     plt.plot(x, yprime, marker='v', markevery=maxs)
     plt.show()
+
 
 
 def find_local_maxs(x, y, pradius=200):
@@ -75,11 +80,11 @@ def find_local_maxs(x, y, pradius=200):
     return maxs
 
 
-def find_local_maxs_ws2(x, y, pradius):
+def find_local_maxs_ws2(wavelength, intensity, pradius=35):
     '''
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
-    :param x: Wavelengths, in nanometers
-    :param y: Intensities
+    :param wavelength: Numpy array of wavelengths, in nanometers
+    :param intensity: Numpy array of intensities
     :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     '''
@@ -90,22 +95,22 @@ def find_local_maxs_ws2(x, y, pradius):
     ws2a = 625
     temp_peak = 0
     peak_location = 0
-    r = int(np.trunc(np.average(np.where(np.round(x, decimals=0) == ws2c - pradius)[0])))
-    for i in range(find_index(x, ws2c - pradius), find_index(x, ws2c + pradius)):
-        if y[i] > temp_peak:
-            temp_peak = y[i]
+    r = int(np.trunc(np.average(np.where(np.round(wavelength, decimals=0) == ws2c - pradius)[0])))
+    for i in range(find_index(wavelength, ws2c - pradius), find_index(wavelength, ws2c + pradius)):
+        if intensity[i] > temp_peak:
+            temp_peak = intensity[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_index(x, ws2b - pradius), find_index(x, ws2b + pradius)):
-        if y[i] > temp_peak:
-            temp_peak = y[i]
+    for i in range(find_index(wavelength, ws2b - pradius), find_index(wavelength, ws2b + pradius)):
+        if intensity[i] > temp_peak:
+            temp_peak = intensity[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_index(x, ws2a - pradius), find_index(x, ws2a + pradius)):
-        if y[i] > temp_peak:
-            temp_peak = y[i]
+    for i in range(find_index(wavelength, ws2a - pradius), find_index(wavelength, ws2a + pradius)):
+        if intensity[i] > temp_peak:
+            temp_peak = intensity[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     maxs = np.delete(maxs, [0])
@@ -113,11 +118,11 @@ def find_local_maxs_ws2(x, y, pradius):
     return maxs
 
 
-def find_local_maxs_wse2(x, y, pradius):
+def find_local_maxs_wse2(wavelength, intensity, pradius=20):
     '''
     Finds local maxes for WSE2 spectra by first assuming the initial location of the maxes.
-    :param x: Wavelengths, in nanometers
-    :param y: Intensities
+    :param wavelength: Numpy array of wavelengths, in nanometers
+    :param intensity: Numpy array of intensities
     :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     '''
@@ -129,27 +134,27 @@ def find_local_maxs_wse2(x, y, pradius):
     wse2a = 760
     temp_peak = 0
     peak_location = 0
-    for i in range(find_index(x, wse2bp - pradius), find_index(x, wse2bp + pradius)):
-        if y[i] > temp_peak:
-            temp_peak = y[i]
+    for i in range(find_index(wavelength, wse2bp - pradius), find_index(wavelength, wse2bp + pradius)):
+        if intensity[i] > temp_peak:
+            temp_peak = intensity[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_index(x, wse2ap - pradius), find_index(x, wse2ap + pradius)):
-        if y[i] > temp_peak:
-            temp_peak = y[i]
+    for i in range(find_index(wavelength, wse2ap - pradius), find_index(wavelength, wse2ap + pradius)):
+        if intensity[i] > temp_peak:
+            temp_peak = intensity[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_index(x, wse2b - pradius), find_index(x, wse2b + pradius)):
-        if y[i] > temp_peak:
-            temp_peak = y[i]
+    for i in range(find_index(wavelength, wse2b - pradius), find_index(wavelength, wse2b + pradius)):
+        if intensity[i] > temp_peak:
+            temp_peak = intensity[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_index(x, wse2a - pradius), find_index(x, wse2a + pradius)):
-        if y[i] > temp_peak:
-            temp_peak = y[i]
+    for i in range(find_index(wavelength, wse2a - pradius), find_index(wavelength, wse2a + pradius)):
+        if intensity[i] > temp_peak:
+            temp_peak = intensity[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     maxs = np.delete(maxs, [0])
