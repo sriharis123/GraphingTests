@@ -2,6 +2,7 @@ import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
 from os import path as path
+import math as Math
 
 
 def draw_normal_plot(x, y):
@@ -26,7 +27,7 @@ def draw_savitzky_golay(x, y):
     '''
     yprime = savitzky_golay(y, 31, 10, 0)
     plt.figure(4)
-    maxs = np.ndarray.tolist(find_local_maxs_ws2(x, yprime, 1000))
+    maxs = np.ndarray.tolist(find_local_maxs_ws2(x, yprime, 35))
     plt.plot(x, yprime, marker='v', markevery=maxs)
     plt.show()
 
@@ -80,22 +81,29 @@ def find_local_maxs_ws2(x, y, pradius):
     ws2B = 525
     ws2A = 625
     temp_peak = 0
-    for i in range(ws2C - pradius, ws2C + pradius):
+    for i in range(find_x_pos(x, ws2C - pradius), find_x_pos(x, ws2C + pradius)):
         if y[i] > temp_peak:
-            temp_peak = x[i]
-    maxs = np.append(maxs, i)
+            temp_peak = i
+    maxs = np.append(maxs, temp_peak)
     temp_peak = 0
-    for i in range(ws2B - pradius, ws2B + pradius):
+    for i in range(find_x_pos(x, ws2B - pradius), find_x_pos(x, ws2B + pradius)):
         if y[i] > temp_peak:
-            temp_peak = x[i]
-    maxs = np.append(maxs, i)
-    for i in range(ws2A - pradius, ws2A + pradius):
+            temp_peak = i
+    maxs = np.append(maxs, temp_peak)
+    temp_peak = 0
+    for i in range(find_x_pos(x, ws2A - pradius), find_x_pos(x, ws2A + pradius)):
         if y[i] > temp_peak:
-            temp_peak = x[i]
-    maxs = np.append(maxs, i)
+            temp_peak = i
+    maxs = np.append(maxs, temp_peak)
     maxs = np.delete(maxs, [0])
     print(maxs)
     return maxs
+
+
+def find_x_pos(x, wvlth):
+    for xpos in range(0, len(x)):
+        if x[xpos] == Math.trunc(wvlth):
+            return xpos
 
 
 # http://scipy-cookbook.readthedocs.io/items/SavitzkyGolay.html
