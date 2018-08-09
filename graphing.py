@@ -26,7 +26,7 @@ def draw_savitzky_golay(x, y):
     '''
     yprime = savitzky_golay(y, 31, 10, 0)
     plt.figure(4)
-    maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
+    maxs = np.ndarray.tolist(find_local_maxs_ws2(x, yprime, 1000))
     plt.plot(x, yprime, marker='v', markevery=maxs)
     plt.show()
 
@@ -69,6 +69,30 @@ def find_local_maxs(x, y, pradius=200):
                 r += 1
         else:
             r += 1
+    maxs = np.delete(maxs, [0])
+    print(maxs)
+    return maxs
+
+
+def find_local_maxs_ws2(x, y, pradius):
+    maxs = np.array([0])
+    ws2C = 450
+    ws2B = 525
+    ws2A = 625
+    temp_peak = 0
+    for i in range(ws2C - pradius, ws2C + pradius):
+        if y[i] > temp_peak:
+            temp_peak = x[i]
+    maxs = np.append(maxs, i)
+    temp_peak = 0
+    for i in range(ws2B - pradius, ws2B + pradius):
+        if y[i] > temp_peak:
+            temp_peak = x[i]
+    maxs = np.append(maxs, i)
+    for i in range(ws2A - pradius, ws2A + pradius):
+        if y[i] > temp_peak:
+            temp_peak = x[i]
+    maxs = np.append(maxs, i)
     maxs = np.delete(maxs, [0])
     print(maxs)
     return maxs
