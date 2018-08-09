@@ -77,24 +77,28 @@ def find_local_maxs(x, y, pradius=200):
 
 def find_local_maxs_ws2(x, y, pradius):
     maxs = np.array([0])
-    ws2C = 450
-    ws2B = 525
-    ws2A = 625
+    ws2c = 450
+    ws2b = 525
+    ws2a = 625
     temp_peak = 0
-    for i in range(find_x_pos(x, ws2C - pradius), find_x_pos(x, ws2C + pradius)):
+    peak_location = 0
+    for i in range(find_x_pos(x, ws2c - pradius), find_x_pos(x, ws2c + pradius)):
         if y[i] > temp_peak:
-            temp_peak = i
-    maxs = np.append(maxs, temp_peak)
+            temp_peak = y[i]
+            peak_location = i
+    maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_x_pos(x, ws2B - pradius), find_x_pos(x, ws2B + pradius)):
+    for i in range(find_x_pos(x, ws2b - pradius), find_x_pos(x, ws2b + pradius)):
         if y[i] > temp_peak:
-            temp_peak = i
-    maxs = np.append(maxs, temp_peak)
+            temp_peak = y[i]
+            peak_location = i
+    maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_x_pos(x, ws2A - pradius), find_x_pos(x, ws2A + pradius)):
+    for i in range(find_x_pos(x, ws2a - pradius), find_x_pos(x, ws2a + pradius)):
         if y[i] > temp_peak:
-            temp_peak = i
-    maxs = np.append(maxs, temp_peak)
+            temp_peak = y[i]
+            peak_location = i
+    maxs = np.append(maxs, peak_location)
     maxs = np.delete(maxs, [0])
     print(maxs)
     return maxs
@@ -102,7 +106,7 @@ def find_local_maxs_ws2(x, y, pradius):
 
 def find_x_pos(x, wvlth):
     for xpos in range(0, len(x)):
-        if x[xpos] == Math.trunc(wvlth):
+        if Math.trunc(x[xpos]) == wvlth:
             return xpos
 
 
@@ -187,6 +191,9 @@ if __name__ == '__main__':
 
     wavelengths = np.array(wavelengths)
     intensities = np.array(intensities)
+
+    print(find_x_pos(wavelengths, 450))
+    print(Math.trunc(1.111))
 
     print('Wavelength\t\t\t\tIntensity')
     for i in range(0, wavelengths.size):
