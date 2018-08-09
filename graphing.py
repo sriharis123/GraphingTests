@@ -89,19 +89,20 @@ def find_local_maxs_ws2(x, y, pradius):
     ws2b = 525
     ws2a = 625
     temp_peak = 0
-    for i in range(find_index(x, ws2c - pradius), find_index(x, ws2c + pradius)):
+    r = np.where(np.round(x, decimals=0) == ws2c - pradius[0])
+    for i in range(np.where(np.round(x, decimals=0) == ws2c - pradius), np.where(np.round(x, decimals=0) == ws2c + pradius)):
         if y[i] > temp_peak:
             temp_peak = y[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_index(x, ws2b - pradius), find_index(x, ws2b + pradius)):
+    for i in range(np.where(np.round(x, decimals=0) == ws2b - pradius), np.where(np.round(x, decimals=0) == ws2b + pradius)):
         if y[i] > temp_peak:
             temp_peak = y[i]
             peak_location = i
     maxs = np.append(maxs, peak_location)
     temp_peak = 0
-    for i in range(find_index(x, ws2a - pradius), find_index(x, ws2a + pradius)):
+    for i in range(np.where(np.round(x, decimals=0) == ws2a - pradius), np.where(np.round(x, decimals=0) == ws2a + pradius)):
         if y[i] > temp_peak:
             temp_peak = y[i]
             peak_location = i
@@ -126,7 +127,7 @@ def find_local_maxs_wse2(x, y, pradius):
     wse2b = 610
     wse2a = 760
     temp_peak = 0
-    for i in range(find_index(x, wse2bp - pradius), find_index(x, wse2bp + pradius)):
+    for i in range(np.where(np.round(x, decimals=0) == wse2bp - pradius)[0], find_index(x, wse2bp + pradius)):
         if y[i] > temp_peak:
             temp_peak = y[i]
             peak_location = i
