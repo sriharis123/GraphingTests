@@ -2,16 +2,15 @@ import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
 from os import path as path
-import math as Math
 
 
 def draw_normal_plot(x, y):
-    '''
+    """
     Draws a normal plot. Make sure x and y are numpy arrays of the same size
     :param x: List of x-axis points
     :param y: List of y-axis points
     :return: N/A
-    '''
+    """
     plt.figure(1)
     maxs = np.ndarray.tolist(find_local_maxs(x, y))
     plt.plot(x, y, marker='v', markevery=maxs)
@@ -19,12 +18,12 @@ def draw_normal_plot(x, y):
 
 
 def draw_savitzky_golay(x, y):
-    '''
+    """
     Draws a noise-cancelled function using the Savitzky Golay function
     :param x: List of x-axis points
     :param y: List of y-axis points
     :return: N/A
-    '''
+    """
     yprime = savitzky_golay(y, 31, 10, 0)
     plt.figure(2)
     maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
@@ -38,25 +37,18 @@ def draw_savitzky_golay(x, y):
 
 
 def find_local_maxs(x, y, pradius=200):
-    '''
+    """
     Finds relative maxs in the list of y points.
     :param x: List of x-axis points
     :param y: List of y-axis points
     :param pradius: A peak will occur in +-pradius of a certain point.
     :return: A numpy array of each max's x-axis point
-    '''
-    maxs = np.array([0]) 
-    # peak_radius and skip assume the shape of the data. though they're not terrible assumptions,
-    #       in this case we can assume something about the underlying physics. [Change made - now an argument]
-    # since you're looking for distance btwn A and B exciton peaks, you can assume that the peaks
-    #       will be within some range of their known positions.
-    # maybe start from there, instead of assuming that the peaks are >20 nm apart
+    """
+    maxs = np.array([0])
     peak_radius = pradius       # checks if this is the greatest value in 200 data points [~20 nanometers]
     r = 200
     while r < len(x):
         if y[r] < y[r - peak_radius] and y[r - peak_radius] > y[r - peak_radius * 2]:
-            # (r - peak_radius) will be a negative number while r<200. [Doesn't give runtime error??]
-            # this will start indexing from the end of y. maybe take the absolute value of the difference? 
             
             # check out https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.amax.html#numpy.amax 
             
@@ -81,13 +73,13 @@ def find_local_maxs(x, y, pradius=200):
 
 
 def find_local_maxs_ws2(wavelength, intensity, pradius=35):
-    '''
+    """
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
     :param intensity: Numpy array of intensities
     :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
-    '''
+    """
     maxs = np.array([0])
     # Assumed positions for peaks:
     ws2c = 450
@@ -119,13 +111,13 @@ def find_local_maxs_ws2(wavelength, intensity, pradius=35):
 
 
 def find_local_maxs_wse2(wavelength, intensity, pradius=20):
-    '''
+    """
     Finds local maxes for WSE2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
     :param intensity: Numpy array of intensities
     :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
-    '''
+    """
     maxs = np.array([0])
     # Assumed positions for peaks:
     wse2bp = 485
@@ -163,13 +155,25 @@ def find_local_maxs_wse2(wavelength, intensity, pradius=20):
 
 
 def find_index(x, wvlth):
-    '''
+    """
     Finds the index of a certain wavelength using the np.where() function
     :param x: Array of wavelengths
     :param wvlth: The wavelength to search for
     :return: the index of the wavelength
-    '''
+    """
     return int(np.trunc(np.average(np.where(np.round(x, decimals=0) == wvlth)[0])))
+
+
+def find_exciton_peak_distance_ws2(wavelength, intensity):
+    """
+    Method to find distance between exciton peaks
+    :param wavelength: Numpy array of wavelengths, in nanometers
+    :param intensity: Numpy array of intensities
+    :return: A numpy array of distances in nm where [0] is the distance between C and B, [1] is the distance between
+    B and A, and [2] is the distance between A and C
+    """
+    maxs = find_local_maxs_ws2(wavelength, savitzky_golay(intensity, 31, 10, 0))
+    return np.array([maxs[1]-maxs[0], maxs[2]-maxs[1], maxs[2]-maxs[0]])
 
 
 # http://scipy-cookbook.readthedocs.io/items/SavitzkyGolay.html
@@ -257,5 +261,6 @@ if __name__ == '__main__':
     print('Wavelength\t\t\t\tIntensity')
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
+    print(find_exciton_peak_distance_ws2(wavelengths, intensities))
     draw_normal_plot(wavelengths, intensities)
     draw_savitzky_golay(wavelengths, intensities)
