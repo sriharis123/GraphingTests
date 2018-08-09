@@ -80,7 +80,7 @@ def find_local_maxs_ws2(x, y, pradius):
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param x: Wavelengths, in nanometers
     :param y: Intensities
-    :param pradius: a radius of pradius nanometers that a peak will be around
+    :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     '''
     maxs = np.array([0])
@@ -116,7 +116,7 @@ def find_local_maxs_wse2(x, y, pradius):
     Finds local maxes for WSE2 spectra by first assuming the initial location of the maxes.
     :param x: Wavelengths, in nanometers
     :param y: Intensities
-    :param pradius: a radius of pradius nanometers that a peak will be around
+    :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     '''
     maxs = np.array([0])
