@@ -106,17 +106,39 @@ def find_local_maxs_ws2(wavelength, intensity, pradius=35):
     #maxs = np.append(maxs, peak_location)
     #maxs = np.delete(maxs, [0])
 
-    locus = wavelength[find_index(wavelength, ws2c - pradius):find_index(wavelength, ws2c + pradius)]
-    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+    locus = intensity[find_index(wavelength, ws2c - pradius):find_index(wavelength, ws2c + pradius)]
+    print(np.amax(locus))
+    print(find_index(locus, np.amax(locus), exact=True))
+    maxs = np.append(maxs, find_index(locus, np.amax(locus), exact=True))
 
-    locus = wavelength[find_index(wavelength, ws2b - pradius):find_index(wavelength, ws2b + pradius)]
-    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+    locus = intensity[find_index(wavelength, ws2b - pradius):find_index(wavelength, ws2b + pradius)]
+    print(np.amax(locus))
+    print(find_index(locus, np.amax(locus), exact=True))
+    maxs = np.append(maxs, find_index(locus, np.amax(locus), exact=True))
 
-    locus = wavelength[find_index(wavelength, ws2a - pradius):find_index(wavelength, ws2a + pradius)]
-    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+    locus = intensity[find_index(wavelength, ws2a - pradius):find_index(wavelength, ws2a + pradius)]
+    print(np.amax(locus))
+    print(find_index(locus, np.amax(locus), exact=True))
+    maxs = np.append(maxs, find_index(locus, np.amax(locus), exact=True))
 
     print(maxs)
+    maxs = np.delete(maxs, [0])
     return maxs
+
+
+def find_index(x, point, exact=False):
+    """
+    Finds the index of a certain wavelength using the np.where() function
+    :param x: Array of wavelengths
+    :param point: The wavelength to search for
+    :return: the index of the wavelength
+    """
+    if exact:
+        r = np.where(x == point)[0]
+    else:
+        r = np.where(np.round(x, decimals=0) == round(point))[0]
+    print("Where" + str(np.where(np.round(x, decimals=0) == round(point))[0]))
+    return int(np.average(r))
 
 
 def find_local_maxs_wse2(wavelength, intensity, pradius=20):
@@ -148,16 +170,6 @@ def find_local_maxs_wse2(wavelength, intensity, pradius=20):
     maxs = np.delete(maxs, [0])
     print(maxs)
     return maxs
-
-
-def find_index(x, wvlth):
-    """
-    Finds the index of a certain wavelength using the np.where() function
-    :param x: Array of wavelengths
-    :param wvlth: The wavelength to search for
-    :return: the index of the wavelength
-    """
-    return int(np.trunc(np.average(np.where(np.round(x, decimals=0) == wvlth)[0])))
 
 
 def find_exciton_peak_distance_ws2(wavelength, intensity):
@@ -257,6 +269,7 @@ if __name__ == '__main__':
     print('Wavelength\t\t\t\tIntensity')
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
-    print(find_exciton_peak_distance_ws2(wavelengths, intensities))
+    # print(find_exciton_peak_distance_ws2(wavelengths, intensities))
+    print(intensities[710])
     draw_normal_plot(wavelengths, intensities)
     draw_savitzky_golay(wavelengths, intensities)
