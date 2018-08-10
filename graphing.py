@@ -35,7 +35,6 @@ def draw_savitzky_golay(x, y):
     plt.show()
 
 
-
 def find_local_maxs(x, y, pradius=200):
     """
     Finds relative maxs in the list of y points.
@@ -72,7 +71,7 @@ def find_local_maxs(x, y, pradius=200):
     return maxs
 
 
-def find_local_maxs_ws2(wavelength, intensity, pradius=35):
+def find_local_maxs_ws2(wavelength, intensity, pradius=50):
     """
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
@@ -80,50 +79,31 @@ def find_local_maxs_ws2(wavelength, intensity, pradius=35):
     :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     """
-    maxs = np.array([0])
+    maxes = np.array([0])
     # Assumed positions for peaks:
     ws2c = 450
     ws2b = 525
     ws2a = 625
-    temp_peak = 0
-    peak_location = 0
-    #for i in range(find_index(wavelength, ws2c - pradius), find_index(wavelength, ws2c + pradius)):
-    #    if intensity[i] > temp_peak:
-    #        temp_peak = intensity[i]
-    #        peak_location = i
-    #maxs = np.append(maxs, peak_location)
-    #temp_peak = 0
-    #for i in range(find_index(wavelength, ws2b - pradius), find_index(wavelength, ws2b + pradius)):
-    #    if intensity[i] > temp_peak:
-    #        temp_peak = intensity[i]
-    #        peak_location = i
-    #maxs = np.append(maxs, peak_location)
-    #temp_peak = 0
-    #for i in range(find_index(wavelength, ws2a - pradius), find_index(wavelength, ws2a + pradius)):
-    #    if intensity[i] > temp_peak:
-    #        temp_peak = intensity[i]
-    #        peak_location = i
-    #maxs = np.append(maxs, peak_location)
-    #maxs = np.delete(maxs, [0])
 
-    locus = intensity[find_index(wavelength, ws2c - pradius):find_index(wavelength, ws2c + pradius)]
-    print(np.amax(locus))
-    print(find_index(locus, np.amax(locus), exact=True))
-    maxs = np.append(maxs, find_index(locus, np.amax(locus), exact=True))
+    start_index = find_index(wavelength, ws2c - pradius)    # where to start searching for a peak (index)
+    stop_index = find_index(wavelength, ws2c + pradius)     # where to stop searching for a peak (index)
+    locus = intensity[start_index:stop_index]               # array that represents where the peak is
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
+            # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
-    locus = intensity[find_index(wavelength, ws2b - pradius):find_index(wavelength, ws2b + pradius)]
-    print(np.amax(locus))
-    print(find_index(locus, np.amax(locus), exact=True))
-    maxs = np.append(maxs, find_index(locus, np.amax(locus), exact=True))
+    start_index = find_index(wavelength, ws2b - pradius)
+    stop_index = find_index(wavelength, ws2b + pradius)
+    locus = intensity[start_index:stop_index]
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
-    locus = intensity[find_index(wavelength, ws2a - pradius):find_index(wavelength, ws2a + pradius)]
-    print(np.amax(locus))
-    print(find_index(locus, np.amax(locus), exact=True))
-    maxs = np.append(maxs, find_index(locus, np.amax(locus), exact=True))
+    start_index = find_index(wavelength, ws2a - pradius)
+    stop_index = find_index(wavelength, ws2a + pradius)
+    locus = intensity[start_index:stop_index]
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
-    print(maxs)
-    maxs = np.delete(maxs, [0])
-    return maxs
+    maxes = np.delete(maxes, [0])
+    print(maxes)
+    return maxes
 
 
 def find_index(x, point, exact=False):
@@ -137,7 +117,7 @@ def find_index(x, point, exact=False):
         r = np.where(x == point)[0]
     else:
         r = np.where(np.round(x, decimals=0) == round(point))[0]
-    print("Where" + str(np.where(np.round(x, decimals=0) == round(point))[0]))
+    # print("Where" + str(r))
     return int(np.average(r))
 
 
@@ -269,7 +249,6 @@ if __name__ == '__main__':
     print('Wavelength\t\t\t\tIntensity')
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
-    # print(find_exciton_peak_distance_ws2(wavelengths, intensities))
-    print(intensities[710])
+    print(find_exciton_peak_distance_ws2(wavelengths, intensities))
     draw_normal_plot(wavelengths, intensities)
     draw_savitzky_golay(wavelengths, intensities)
