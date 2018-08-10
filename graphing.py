@@ -71,12 +71,12 @@ def find_local_maxes(x, y, pradius=200):
     return maxs
 
 
-def find_local_maxes_ws2(wavelength, intensity, pradius=50):
+def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
     """
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
     :param intensity: Numpy array of intensities
-    :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
+    :param pradiusnm: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     """
     maxes = np.array([0])
@@ -85,19 +85,19 @@ def find_local_maxes_ws2(wavelength, intensity, pradius=50):
     ws2b = 525
     ws2a = 625
 
-    start_index = find_index(wavelength, ws2c - pradius)    # where to start searching for a peak (index)
-    stop_index = find_index(wavelength, ws2c + pradius)     # where to stop searching for a peak (index)
+    start_index = find_index(wavelength, ws2c - pradiusnm)    # where to start searching for a peak (index)
+    stop_index = find_index(wavelength, ws2c + pradiusnm)     # where to stop searching for a peak (index)
     locus = intensity[start_index:stop_index]               # array that represents where the peak is
     maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
             # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
-    start_index = find_index(wavelength, ws2b - pradius)
-    stop_index = find_index(wavelength, ws2b + pradius)
+    start_index = find_index(wavelength, ws2b - pradiusnm)
+    stop_index = find_index(wavelength, ws2b + pradiusnm)
     locus = intensity[start_index:stop_index]
     maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
-    start_index = find_index(wavelength, ws2a - pradius)
-    stop_index = find_index(wavelength, ws2a + pradius)
+    start_index = find_index(wavelength, ws2a - pradiusnm)
+    stop_index = find_index(wavelength, ws2a + pradiusnm)
     locus = intensity[start_index:stop_index]
     maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
