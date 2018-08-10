@@ -12,8 +12,8 @@ def draw_normal_plot(x, y):
     :return: N/A
     """
     plt.figure(1)
-    maxs = np.ndarray.tolist(find_local_maxs(x, y))
-    plt.plot(x, y, marker='v', markevery=maxs)
+    maxes = np.ndarray.tolist(find_local_maxes(x, y))
+    plt.plot(x, y, marker='v', markevery=maxes)
     plt.show(block=False)
 
 
@@ -26,16 +26,16 @@ def draw_savitzky_golay(x, y):
     """
     yprime = savitzky_golay(y, 31, 10, 0)
     plt.figure(2)
-    maxs = np.ndarray.tolist(find_local_maxs(x, yprime))
-    plt.plot(x, yprime, marker='v', markevery=maxs)
+    maxes = np.ndarray.tolist(find_local_maxes(x, yprime))
+    plt.plot(x, yprime, marker='v', markevery=maxes)
     plt.show(block=False)
     plt.figure(3)
-    maxs = np.ndarray.tolist(find_local_maxs_ws2(x, yprime))
-    plt.plot(x, yprime, marker='v', markevery=maxs)
+    maxes = np.ndarray.tolist(find_local_maxes_ws2(x, yprime))
+    plt.plot(x, yprime, marker='v', markevery=maxes)
     plt.show()
 
 
-def find_local_maxs(x, y, pradius=200):
+def find_local_maxes(x, y, pradius=200):
     """
     Finds relative maxs in the list of y points.
     :param x: List of x-axis points
@@ -71,7 +71,7 @@ def find_local_maxs(x, y, pradius=200):
     return maxs
 
 
-def find_local_maxs_ws2(wavelength, intensity, pradius=50):
+def find_local_maxes_ws2(wavelength, intensity, pradius=50):
     """
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
@@ -121,7 +121,7 @@ def find_index(x, point, exact=False):
     return int(np.average(r))
 
 
-def find_local_maxs_wse2(wavelength, intensity, pradius=20):
+def find_local_maxes_wse2(wavelength, intensity, pradius=20):
     """
     Finds local maxes for WSE2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
@@ -160,7 +160,7 @@ def find_exciton_peak_distance_ws2(wavelength, intensity):
     :return: A numpy array of distances in nm where [0] is the distance between C and B, [1] is the distance between
     B and A, and [2] is the distance between A and C
     """
-    maxs = find_local_maxs_ws2(wavelength, savitzky_golay(intensity, 31, 10, 0))
+    maxs = find_local_maxes_ws2(wavelength, savitzky_golay(intensity, 31, 10, 0))
     return np.array([maxs[1]-maxs[0], maxs[2]-maxs[1], maxs[2]-maxs[0]])
 
 
