@@ -129,27 +129,35 @@ def find_local_maxes_wse2(wavelength, intensity, pradius=20):
     :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     """
-    maxs = np.array([0])
+    maxes = np.array([0])
     # Assumed positions for peaks:
     wse2bp = 485
     wse2ap = 575
     wse2b = 610
     wse2a = 760
-    locus = wavelength[find_index(wavelength, wse2bp - pradius):find_index(wavelength, wse2bp + pradius)]
-    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+    start_index = find_index(wavelength, wse2bp - pradius)
+    stop_index = find_index(wavelength, wse2bp + pradius)
+    locus = intensity[start_index:stop_index]
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
-    locus = wavelength[find_index(wavelength, wse2ap - pradius):find_index(wavelength, wse2ap + pradius)]
-    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+    start_index = find_index(wavelength, wse2ap - pradius)
+    stop_index = find_index(wavelength, wse2ap + pradius)
+    locus = intensity[start_index:stop_index]
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
-    locus = wavelength[find_index(wavelength, wse2b - pradius):find_index(wavelength, wse2b + pradius)]
-    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+    start_index = find_index(wavelength, wse2b - pradius)
+    stop_index = find_index(wavelength, wse2b + pradius)
+    locus = intensity[start_index:stop_index]
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
-    locus = wavelength[find_index(wavelength, wse2a - pradius):find_index(wavelength, wse2a + pradius)]
-    maxs = np.append(maxs, find_index(locus, np.amax(locus)))
+    start_index = find_index(wavelength, wse2a - pradius)
+    stop_index = find_index(wavelength, wse2a + pradius)
+    locus = intensity[start_index:stop_index]
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
-    maxs = np.delete(maxs, [0])
-    print(maxs)
-    return maxs
+    maxes = np.delete(maxes, [0])
+    print(maxes)
+    return maxes
 
 
 def find_exciton_peak_distance_ws2(wavelength, intensity):
