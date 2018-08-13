@@ -2,6 +2,7 @@ import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
 from os import path as path
+import time
 
 
 def plot_all(x, y):
@@ -45,6 +46,7 @@ def find_local_maxes(x, y, pradius=200):
     :param pradius: A peak will occur in +-pradius of a certain point.
     :return: A numpy array of each max's x-axis point
     """
+    starttime = time.time()
     maxes = np.array([0])
     peak_radius = pradius       # checks if this is the greatest value in 200 data points [~20 nanometers]
     r = 200
@@ -70,6 +72,7 @@ def find_local_maxes(x, y, pradius=200):
             r += 1
     maxes = np.delete(maxes, [0])
     print('find_local_maxes(): ' + str(maxes))
+    print('find_local_maxes(): ' + str(time.time() - starttime) + ' ms')
     return maxes
 
 
@@ -81,6 +84,7 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
     :param pradiusnm: a radius of pradius nanometers around an assumed position where a peak will be
     :return: a numpy array of peaks
     """
+    starttime = time.time()
     maxes = np.array([0])
     # Assumed positions for peaks:
     ws2c = 450
@@ -105,6 +109,7 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
 
     maxes = np.delete(maxes, [0])
     print('find_local_maxes_ws2(): ' + str(maxes))
+    print('find_local_maxes_ws2(): ' + str(time.time() - starttime) + ' ms')
     return maxes
 
 
