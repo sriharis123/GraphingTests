@@ -127,6 +127,7 @@ def find_local_maxes_wse2(wavelength, intensity, pradius=20):
     wse2ap = 575
     wse2b = 610
     wse2a = 760
+    
     start_index = find_index(wavelength, wse2bp - pradius)
     stop_index = find_index(wavelength, wse2bp + pradius)
     locus = intensity[start_index:stop_index]
