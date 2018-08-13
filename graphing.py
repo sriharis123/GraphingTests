@@ -94,18 +94,18 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
     start_index = find_index(wavelength, ws2c - pradiusnm)    # where to start searching for a peak (index)
     stop_index = find_index(wavelength, ws2c + pradiusnm)     # where to stop searching for a peak (index)
     locus = intensity[start_index:stop_index]               # array that represents where the peak is
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index)
     # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
     start_index = find_index(wavelength, ws2b - pradiusnm)
     stop_index = find_index(wavelength, ws2b + pradiusnm)
     locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index)
 
     start_index = find_index(wavelength, ws2a - pradiusnm)
     stop_index = find_index(wavelength, ws2a + pradiusnm)
     locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
+    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index)
 
     maxes = np.delete(maxes, [0])
     print('find_local_maxes_ws2(): ' + str(maxes))
@@ -127,7 +127,6 @@ def find_local_maxes_wse2(wavelength, intensity, pradius=20):
     wse2ap = 575
     wse2b = 610
     wse2a = 760
-    
     start_index = find_index(wavelength, wse2bp - pradius)
     stop_index = find_index(wavelength, wse2bp + pradius)
     locus = intensity[start_index:stop_index]
@@ -256,7 +255,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180420 WS2_2 a.spe'))
+    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180420 WS2_2 c.spe'))
     wavelengths = data[0]
     intensities = data[1]
 
