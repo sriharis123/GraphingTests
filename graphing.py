@@ -12,9 +12,9 @@ def plot_all(x, y):
     :return: N/A
     """
     yprime = savitzky_golay(y, 31, 10, 0)
-    plot_annotate(x, y, 0, np.ndarray.tolist(find_local_maxes(x, y)), plot_name='LMaxNorm')
-    plot_annotate(x, yprime, 1, np.ndarray.tolist(find_local_maxes(x, yprime)), plot_name='LMaxSG', color='r')
-    plot_annotate(x, yprime, 2, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), plot_name='LMaxSG_WS2', color='r')
+    plot_annotate(x, y, ax1, np.ndarray.tolist(find_local_maxes(x, y)), plot_name='LMaxNorm')
+    plot_annotate(x, yprime, ax2, np.ndarray.tolist(find_local_maxes(x, yprime)), plot_name='LMaxSG', color='r')
+    plot_annotate(x, yprime, ax3, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), plot_name='LMaxSG_WS2', color='r')
 
 
 def plot_annotate(x, y, graph_location, maxes, plot_name='Unnamed', color='b'):
@@ -28,9 +28,9 @@ def plot_annotate(x, y, graph_location, maxes, plot_name='Unnamed', color='b'):
     :param color: Color to use when plotting
     :return: N/A
     """
-    plot[graph_location].plot(x, y, marker='v', markevery=maxes, color=color)
+    graph_location.plot(x, y, marker='v', markevery=maxes, color=color)
     for r in range(0, len(maxes)):
-        plot[graph_location].annotate(plot_name + ': (' + (str(x[maxes[r]]) + ', ' + str(y[maxes[r]])) + ')',
+        graph_location.annotate(plot_name + ': (' + (str(x[maxes[r]]) + ', ' + str(y[maxes[r]])) + ')',
                                       xy=(x[maxes[r]], y[maxes[r]]))
 
 
@@ -88,7 +88,7 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
     stop_index = find_index(wavelength, ws2c + pradiusnm)     # where to stop searching for a peak (index)
     locus = intensity[start_index:stop_index]               # array that represents where the peak is
     maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
-            # find the index of the peak in the new array and add it to the start index, and add it all to maxes
+    # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
     start_index = find_index(wavelength, ws2b - pradiusnm)
     stop_index = find_index(wavelength, ws2b + pradiusnm)
@@ -257,7 +257,7 @@ if __name__ == '__main__':
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
     '''
-    figure, plot = plt.subplots(3, sharex=True)
+    figure, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)
     figure.suptitle('Spectra')
 
     print(find_exciton_peak_distance_ws2(wavelengths, intensities))
