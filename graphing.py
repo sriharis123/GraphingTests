@@ -25,9 +25,9 @@ def plot_annotate(x, y, graph_location, maxes, plot_name='Unnamed', color='b'):
     Plot with a certain color and markers, then annotates
     :param x: List of x-axis points
     :param y: List of y-axis points
-    :param graph_location:
+    :param graph_location: Which graph this plot should show up on
     :param maxes: List of max values in the plot (x, y)
-    :param plot_name:
+    :param plot_name: The name of the plot for annotations
     :param color: Color to use when plotting
     :return: N/A
     """
@@ -69,7 +69,7 @@ def find_local_maxes(x, y, pradius=200):
         else:
             r += 1
     maxes = np.delete(maxes, [0])
-    print(maxes)
+    print('find_local_maxes(): ' + str(maxes))
     return maxes
 
 
@@ -104,7 +104,7 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
     maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
     maxes = np.delete(maxes, [0])
-    print(maxes)
+    print('find_local_maxes_ws2(): ' + str(maxes))
     return maxes
 
 
@@ -143,7 +143,7 @@ def find_local_maxes_wse2(wavelength, intensity, pradius=20):
     maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
 
     maxes = np.delete(maxes, [0])
-    print(maxes)
+    print('find_local_maxes_wse2(): ' + str(maxes))
     return maxes
 
 
@@ -263,6 +263,6 @@ if __name__ == '__main__':
     figure, (graph_1, graph_2, graph_3) = plt.subplots(1, 3, sharey=True)
     figure.suptitle('Spectra')
 
-    print(find_exciton_peak_distance_ws2(wavelengths, intensities))
+    print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
     plot_all(wavelengths, intensities)
     plt.show()
