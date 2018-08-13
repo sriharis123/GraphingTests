@@ -4,17 +4,7 @@ from matplotlib import pyplot as plt
 from os import path as path
 
 
-def draw_normal_plot(x, y):
-    """
-    Draws a normal plot. Make sure x and y are numpy arrays of the same size
-    :param x: List of x-axis points
-    :param y: List of y-axis points
-    :return: N/A
-    """
-    plot_annotate(x, y, 0, np.ndarray.tolist(find_local_maxes(x, y)), plot_name='LMaxNorm')
-
-
-def draw_savitzky_golay(x, y):
+def plot_all(x, y):
     """
     Draws a noise-cancelled function using the Savitzky Golay function
     :param x: List of x-axis points
@@ -22,6 +12,7 @@ def draw_savitzky_golay(x, y):
     :return: N/A
     """
     yprime = savitzky_golay(y, 31, 10, 0)
+    plot_annotate(x, y, 0, np.ndarray.tolist(find_local_maxes(x, y)), plot_name='LMaxNorm')
     plot_annotate(x, yprime, 1, np.ndarray.tolist(find_local_maxes(x, yprime)), plot_name='LMaxSG', color='r')
     plot_annotate(x, yprime, 2, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), plot_name='LMaxSG_WS2', color='r')
 
@@ -267,9 +258,8 @@ if __name__ == '__main__':
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
     '''
     figure, plot = plt.subplots(3, sharex=True)
-    figure.suptitle('Subplotted Graph')
+    figure.suptitle('Spectra')
 
     print(find_exciton_peak_distance_ws2(wavelengths, intensities))
-    draw_normal_plot(wavelengths, intensities)
-    draw_savitzky_golay(wavelengths, intensities)
+    plot_all(wavelengths, intensities)
     plt.show()
