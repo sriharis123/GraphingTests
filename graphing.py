@@ -11,8 +11,7 @@ def draw_normal_plot(x, y):
     :param y: List of y-axis points
     :return: N/A
     """
-    plot_annotate(x, y, 'o', np.ndarray.tolist(find_local_maxes(x, y)), 'LMaxNorm',
-                  sepFigure=False, sepFigureName='plotnormal')
+    plot_annotate(x, y, 'o', np.ndarray.tolist(find_local_maxes(x, y)), 'LMaxNorm')
 
 
 def draw_savitzky_golay(x, y):
@@ -23,25 +22,27 @@ def draw_savitzky_golay(x, y):
     :return: N/A
     """
     yprime = savitzky_golay(y, 31, 10, 0)
-    plot_annotate(x, yprime, 'v', np.ndarray.tolist(find_local_maxes(x, yprime)), 'LMaxSG', 'r')
-    plot_annotate(x, yprime, 'v', np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), 'LMaxSG_WS2', 'r',
-                  sepFigure=True, sepFigureName='plotws2')
+    figure.suptitle('Subplotted Graph')
+    plot_annotate(x, yprime, plot, 0, np.ndarray.tolist(find_local_maxes(x, yprime)), plot_name='LMaxSG', color='r')
+    plot_annotate(x, yprime, plot, 1, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), plot_name='LMaxSG_WS2', color='r')
 
 
-def plot_annotate(x, y, marker, maxes, plotName, color='b', sepFigure=False, sepFigureName='Unnamed'):
+def plot_annotate(x, y, plot, graph_location, maxes, marker='v', plot_name='Unnamed', color='b'):
     """
     Plot with a certain color and markers, then annotates
     :param x: List of x-axis points
     :param y: List of y-axis points
+    :param plot:
+    :param graph_location:
     :param maxes: List of max values in the plot (x, y)
+    :param marker:
+    :param plot_name:
     :param color: Color to use when plotting
     :return: N/A
     """
-    if sepFigure:
-        plt.figure(sepFigureName)
-    plt.plot(x, y, marker=marker, markevery=maxes, color=color)
+    plot[graph_location].plot(x, y, marker=marker, markevery=maxes, color=color)
     for r in range(0, 3):
-        plt.annotate(plotName + ': (' + (str(x[maxes[r]]) + ', ' + str(y[maxes[r]])) + ')',
+        plt.annotate(plot_name + ': (' + (str(x[maxes[r]]) + ', ' + str(y[maxes[r]])) + ')',
                      xy=(x[maxes[r]], y[maxes[r]]))
 
 
@@ -268,6 +269,8 @@ if __name__ == '__main__':
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
     '''
+    figure, plot = plt.subplots(3, sharex=True)
+
     print(find_exciton_peak_distance_ws2(wavelengths, intensities))
     draw_normal_plot(wavelengths, intensities)
     draw_savitzky_golay(wavelengths, intensities)
