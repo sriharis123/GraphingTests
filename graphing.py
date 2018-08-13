@@ -28,22 +28,26 @@ def draw_savitzky_golay(x, y):
     plt.figure(2)
     maxes = np.ndarray.tolist(find_local_maxes(x, yprime))
     plt.plot(x, yprime, marker='v', markevery=maxes)
+    for r in range(0, 3):
+        plt.annotate((str(x[maxes[r]]) + ', ' + str(y[maxes[r]])), xy=(x[maxes[r]], y[maxes[r]]))
     plt.show(block=False)
     plt.figure(3)
     maxes = np.ndarray.tolist(find_local_maxes_ws2(x, yprime))
     plt.plot(x, yprime, marker='v', markevery=maxes)
+    for r in range(0, 3):
+        plt.annotate((str(x[maxes[r]]) + ', ' + str(y[maxes[r]])), xy=(x[maxes[r]], y[maxes[r]]))
     plt.show()
 
 
 def find_local_maxes(x, y, pradius=200):
     """
-    Finds relative maxs in the list of y points.
+    Finds relative maxes in the list of y points.
     :param x: List of x-axis points
     :param y: List of y-axis points
     :param pradius: A peak will occur in +-pradius of a certain point.
     :return: A numpy array of each max's x-axis point
     """
-    maxs = np.array([0])
+    maxes = np.array([0])
     peak_radius = pradius       # checks if this is the greatest value in 200 data points [~20 nanometers]
     r = 200
     while r < len(x):
@@ -60,15 +64,15 @@ def find_local_maxes(x, y, pradius=200):
                 else:
                     c += 1  # continue looking until it reaches r
             if add_as_max:
-                maxs = np.append(maxs, r - peak_radius)
+                maxes = np.append(maxes, r - peak_radius)
                 r += peak_radius     # continue looking again after the edge of the peak radius
             else:
                 r += 1
         else:
             r += 1
-    maxs = np.delete(maxs, [0])
-    print(maxs)
-    return maxs
+    maxes = np.delete(maxes, [0])
+    print(maxes)
+    return maxes
 
 
 def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
