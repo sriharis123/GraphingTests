@@ -12,9 +12,12 @@ def plot_all(x, y):
     :return: N/A
     """
     yprime = savitzky_golay(y, 31, 10, 0)
-    plot_annotate(x, y, ax1, np.ndarray.tolist(find_local_maxes(x, y)), plot_name='LMaxNorm')
-    plot_annotate(x, yprime, ax2, np.ndarray.tolist(find_local_maxes(x, yprime)), plot_name='LMaxSG', color='r')
-    plot_annotate(x, yprime, ax3, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), plot_name='LMaxSG_WS2', color='r')
+    plot_annotate(x, y, graph_1, np.ndarray.tolist(find_local_maxes(x, y)),
+                  plot_name='LMaxNorm')
+    plot_annotate(x, yprime, graph_2, np.ndarray.tolist(find_local_maxes(x, yprime)),
+                  plot_name='LMaxSG', color='r')
+    plot_annotate(x, yprime, graph_3, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)),
+                  plot_name='LMaxSG_WS2', color='r')
 
 
 def plot_annotate(x, y, graph_location, maxes, plot_name='Unnamed', color='b'):
@@ -30,8 +33,8 @@ def plot_annotate(x, y, graph_location, maxes, plot_name='Unnamed', color='b'):
     """
     graph_location.plot(x, y, marker='v', markevery=maxes, color=color)
     for r in range(0, len(maxes)):
-        graph_location.annotate(plot_name + ': (' + (str(x[maxes[r]]) + ', ' + str(y[maxes[r]])) + ')',
-                                      xy=(x[maxes[r]], y[maxes[r]]))
+        graph_location.annotate(plot_name + ': (' + (str(round(x[maxes[r]], 3)) + ', ' + str(round(y[maxes[r]], 3)))
+                                + ')', xy=(x[maxes[r]], y[maxes[r]]))
 
 
 def find_local_maxes(x, y, pradius=200):
@@ -257,7 +260,7 @@ if __name__ == '__main__':
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
     '''
-    figure, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)
+    figure, (graph_1, graph_2, graph_3) = plt.subplots(1, 3, sharey=True)
     figure.suptitle('Spectra')
 
     print(find_exciton_peak_distance_ws2(wavelengths, intensities))
