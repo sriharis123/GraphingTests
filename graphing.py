@@ -11,8 +11,8 @@ def draw_normal_plot(x, y):
     :param y: List of y-axis points
     :return: N/A
     """
-    plt.figure(1)
-    plot_annotate(x, y, np.ndarray.tolist(find_local_maxes(x, y)))
+    plot_annotate(x, y, 'o', np.ndarray.tolist(find_local_maxes(x, y)), 'LMaxNorm',
+                  sepFigure=False, sepFigureName='plotnormal')
 
 
 def draw_savitzky_golay(x, y):
@@ -23,13 +23,12 @@ def draw_savitzky_golay(x, y):
     :return: N/A
     """
     yprime = savitzky_golay(y, 31, 10, 0)
-    plt.figure(2)
-    plot_annotate(x, yprime, np.ndarray.tolist(find_local_maxes(x, yprime)), 'g')
-    plt.figure(3)
-    plot_annotate(x, yprime, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), 'r')
+    plot_annotate(x, yprime, 'v', np.ndarray.tolist(find_local_maxes(x, yprime)), 'LMaxSG', 'r')
+    plot_annotate(x, yprime, 'v', np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), 'LMaxSG_WS2', 'r',
+                  sepFigure=True, sepFigureName='plotws2')
 
 
-def plot_annotate(x, y, maxes, color='b'):
+def plot_annotate(x, y, marker, maxes, plotName, color='b', sepFigure=False, sepFigureName='Unnamed'):
     """
     Plot with a certain color and markers, then annotates
     :param x: List of x-axis points
@@ -38,9 +37,12 @@ def plot_annotate(x, y, maxes, color='b'):
     :param color: Color to use when plotting
     :return: N/A
     """
-    plt.plot(x, y, marker='v', markevery=maxes, color=color)
+    if sepFigure:
+        plt.figure(sepFigureName)
+    plt.plot(x, y, marker=marker, markevery=maxes, color=color)
     for r in range(0, 3):
-        plt.annotate((str(x[maxes[r]]) + ', ' + str(y[maxes[r]])), xy=(x[maxes[r]], y[maxes[r]]))
+        plt.annotate(plotName + ': (' + (str(x[maxes[r]]) + ', ' + str(y[maxes[r]])) + ')',
+                     xy=(x[maxes[r]], y[maxes[r]]))
 
 
 def find_local_maxes(x, y, pradius=200):
