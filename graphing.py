@@ -12,9 +12,7 @@ def draw_normal_plot(x, y):
     :return: N/A
     """
     plt.figure(1)
-    maxes = np.ndarray.tolist(find_local_maxes(x, y))
-    plt.plot(x, y, marker='v', markevery=maxes)
-    plt.show(block=False)
+    plot_annotate(x, y, np.ndarray.tolist(find_local_maxes(x, y)))
 
 
 def draw_savitzky_golay(x, y):
@@ -26,17 +24,23 @@ def draw_savitzky_golay(x, y):
     """
     yprime = savitzky_golay(y, 31, 10, 0)
     plt.figure(2)
-    maxes = np.ndarray.tolist(find_local_maxes(x, yprime))
-    plt.plot(x, yprime, marker='v', markevery=maxes)
-    for r in range(0, 3):
-        plt.annotate((str(x[maxes[r]]) + ', ' + str(y[maxes[r]])), xy=(x[maxes[r]], y[maxes[r]]))
-    plt.show(block=False)
+    plot_annotate(x, yprime, np.ndarray.tolist(find_local_maxes(x, yprime)), 'g')
     plt.figure(3)
-    maxes = np.ndarray.tolist(find_local_maxes_ws2(x, yprime))
-    plt.plot(x, yprime, marker='v', markevery=maxes)
+    plot_annotate(x, yprime, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)), 'r')
+
+
+def plot_annotate(x, y, maxes, color='b'):
+    """
+    Plot with a certain color and markers, then annotates
+    :param x: List of x-axis points
+    :param y: List of y-axis points
+    :param maxes: List of max values in the plot (x, y)
+    :param color: Color to use when plotting
+    :return: N/A
+    """
+    plt.plot(x, y, marker='v', markevery=maxes, color=color)
     for r in range(0, 3):
         plt.annotate((str(x[maxes[r]]) + ', ' + str(y[maxes[r]])), xy=(x[maxes[r]], y[maxes[r]]))
-    plt.show()
 
 
 def find_local_maxes(x, y, pradius=200):
@@ -110,21 +114,6 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
     return maxes
 
 
-def find_index(x, point, exact=False):
-    """
-    Finds the index of a certain wavelength using the np.where() function
-    :param x: Array of wavelengths
-    :param point: The wavelength to search for
-    :return: the index of the wavelength
-    """
-    if exact:
-        r = np.where(x == point)[0]
-    else:
-        r = np.where(np.round(x, decimals=0) == round(point))[0]
-    # print("Where" + str(r))
-    return int(np.average(r))
-
-
 def find_local_maxes_wse2(wavelength, intensity, pradius=20):
     """
     Finds local maxes for WSE2 spectra by first assuming the initial location of the maxes.
@@ -162,6 +151,21 @@ def find_local_maxes_wse2(wavelength, intensity, pradius=20):
     maxes = np.delete(maxes, [0])
     print(maxes)
     return maxes
+
+
+def find_index(x, point, exact=False):
+    """
+    Finds the index of a certain wavelength using the np.where() function
+    :param x: Array of wavelengths
+    :param point: The wavelength to search for
+    :return: the index of the wavelength
+    """
+    if exact:
+        r = np.where(x == point)[0]
+    else:
+        r = np.where(np.round(x, decimals=0) == round(point))[0]
+    # print("Where" + str(r))
+    return int(np.average(r))
 
 
 def find_exciton_peak_distance_ws2(wavelength, intensity):
@@ -264,3 +268,4 @@ if __name__ == '__main__':
     print(find_exciton_peak_distance_ws2(wavelengths, intensities))
     draw_normal_plot(wavelengths, intensities)
     draw_savitzky_golay(wavelengths, intensities)
+    plt.show()
