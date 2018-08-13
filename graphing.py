@@ -152,6 +152,7 @@ def find_index(x, point, exact=False):
     Finds the index of a certain wavelength using the np.where() function
     :param x: Array of wavelengths
     :param point: The wavelength to search for
+    :param exact: Whether an exact value is being searched for (if not, a rounded value will be searched)
     :return: the index of the wavelength
     """
     if exact:
@@ -170,8 +171,8 @@ def find_exciton_peak_distance_ws2(wavelength, intensity):
     :return: A numpy array of distances in nm where [0] is the distance between C and B, [1] is the distance between
     B and A, and [2] is the distance between A and C
     """
-    maxs = find_local_maxes_ws2(wavelength, savitzky_golay(intensity, 31, 10, 0))
-    return np.array([maxs[1]-maxs[0], maxs[2]-maxs[1], maxs[2]-maxs[0]])
+    maxes = find_local_maxes_ws2(wavelength, savitzky_golay(intensity, 31, 10, 0))
+    return np.array([maxes[1]-maxes[0], maxes[2]-maxes[1], maxes[2]-maxes[0]])
 
 
 # http://scipy-cookbook.readthedocs.io/items/SavitzkyGolay.html
@@ -242,10 +243,10 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     m = np.linalg.pinv(b).A[deriv] * rate**deriv * factorial(deriv)
     # pad the signal at the extremes with
     # values taken from the signal itself
-    firstvals = y[0] - np.abs( y[1:half_window+1][::-1] - y[0] )
+    firstvals = y[0] - np.abs(y[1:half_window+1][::-1] - y[0])
     lastvals = y[-1] + np.abs(y[-half_window-1:-1][::-1] - y[-1])
     y = np.concatenate((firstvals, y, lastvals))
-    return np.convolve( m[::-1], y, mode='valid')
+    return np.convolve(m[::-1], y, mode='valid')
 
 
 if __name__ == '__main__':
