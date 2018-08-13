@@ -257,16 +257,17 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180423 WS2_2.spe'))
+    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180420 WS2_2 a.spe'))
     wavelengths = data[0]
     intensities = data[1]
 
     wavelengths = np.array(wavelengths)
     intensities = np.array(intensities)
-
+    '''
     print('Wavelength\t\t\t\tIntensity')
     for i in range(0, wavelengths.size):
         print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
+    '''
     print(find_exciton_peak_distance_ws2(wavelengths, intensities))
     draw_normal_plot(wavelengths, intensities)
     draw_savitzky_golay(wavelengths, intensities)
