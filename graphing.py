@@ -91,9 +91,9 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
     ws2b = 525
     ws2a = 625
 
-    start_index = find_index(wavelength, ws2c - pradiusnm)    # where to start searching for a peak (index)
+    start_index = find_index(wavelength, ws2c - pradiusnm if ws2c - pradiusnm > ws2c else ws2c)    # where to start searching for a peak (index)
     stop_index = find_index(wavelength, ws2c + pradiusnm)     # where to stop searching for a peak (index)
-    locus = intensity[start_index:stop_index]               # array that represents where the peak is
+    locus = intensity[start_index:stop_index]                 # array that represents where the peak is
     maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index)
     # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
@@ -160,11 +160,11 @@ def find_index(x, point, exact=False):
     :param exact: Whether an exact value is being searched for (if not, a rounded value will be searched)
     :return: the index of the wavelength
     """
-    if exact:
-        r = np.where(x == point)[0]
-    else:
-        r = np.where(np.round(x, decimals=0) == round(point))[0]
-    # print("Where" + str(r))
+    #if exact:
+    #    r = np.where(x == point)[0]
+    #else:
+    r = np.where(np.round(x, decimals=0) == round(point))[0]
+    print("Where" + str(r))
     return int(np.average(r))
 
 
@@ -255,7 +255,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180420 WS2_2 c.spe'))
+    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180404 WS2_1_2 f.spe'))
     wavelengths = data[0]
     intensities = data[1]
 
@@ -270,5 +270,5 @@ if __name__ == '__main__':
     figure.suptitle('Spectra')
 
     plot_all(wavelengths, intensities)
-    print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
+    #print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
     plt.show()
