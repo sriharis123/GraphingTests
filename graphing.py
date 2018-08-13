@@ -72,7 +72,7 @@ def find_local_maxes(x, y, pradius=200):
             r += 1
     maxes = np.delete(maxes, [0])
     print('find_local_maxes(): ' + str(maxes))
-    print('find_local_maxes(): ' + str(time.time() - starttime) + ' ms')
+    print('find_local_maxes(): ' + str(round((time.time() - starttime) * 1000, 4)) + ' ms')
     return maxes
 
 
@@ -109,7 +109,7 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
 
     maxes = np.delete(maxes, [0])
     print('find_local_maxes_ws2(): ' + str(maxes))
-    print('find_local_maxes_ws2(): ' + str(time.time() - starttime) + ' ms')
+    print('find_local_maxes_ws2(): ' + str(round((time.time() - starttime) * 1000, 4)) + ' ms')
     return maxes
 
 
@@ -269,6 +269,6 @@ if __name__ == '__main__':
     figure, (graph_1, graph_2, graph_3) = plt.subplots(1, 3, sharey=True)
     figure.suptitle('Spectra')
 
-    print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
     plot_all(wavelengths, intensities)
+    print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
     plt.show()
