@@ -160,11 +160,11 @@ def find_index(x, point, exact=False):
     :param exact: Whether an exact value is being searched for (if not, a rounded value will be searched)
     :return: the index of the wavelength
     """
-    #if exact:
-    #    r = np.where(x == point)[0]
-    #else:
-    r = np.where(np.round(x, decimals=0) == round(point))[0]
-    print("Where" + str(r))
+    if exact:
+        r = np.where(x == point)[0]
+    else:
+        r = np.where(np.round(x, decimals=0) == round(point))[0]
+    # print("Where" + str(r))
     return int(np.average(r))
 
 
