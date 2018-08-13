@@ -76,7 +76,7 @@ def find_local_maxes(x, y, pradius=200):
     return maxes
 
 
-def find_local_maxes_ws2(wavelength, intensity, pradiusnm=50):
+def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40):
     """
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
@@ -242,7 +242,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     if window_size < order + 2:
         raise TypeError("window_size is too small for the polynomials order")
     order_range = range(order+1)
-    half_window = (window_size -1) // 2
+    half_window = (window_size - 1) // 2
     # precompute coefficients
     b = np.mat([[k**i for i in order_range] for k in range(-half_window, half_window+1)])
     m = np.linalg.pinv(b).A[deriv] * rate**deriv * factorial(deriv)
@@ -255,7 +255,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180404 WS2_1_2 f.spe'))
+    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180625 WS2_1_2 B rflctn.spe'))
     wavelengths = data[0]
     intensities = data[1]
 
@@ -270,5 +270,5 @@ if __name__ == '__main__':
     figure.suptitle('Spectra')
 
     plot_all(wavelengths, intensities)
-    #print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
+    print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
     plt.show()
