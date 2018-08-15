@@ -93,8 +93,9 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40):
 
     start_index = find_index(wavelength, ws2c - pradiusnm if ws2c - pradiusnm > ws2c else ws2c)    # where to start searching for a peak (index)
     stop_index = find_index(wavelength, ws2c + pradiusnm)     # where to stop searching for a peak (index)
+    area = wavelengths[start_index:stop_index]
     locus = intensity[start_index:stop_index]                 # array that represents where the peak is
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index)
+    maxes = np.append(maxes, find_local_maxes(area, locus, 60) + start_index)
     # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
     start_index = find_index(wavelength, ws2b - pradiusnm)
@@ -255,7 +256,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 
 if __name__ == '__main__':
-    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180625 WS2_1_2 B rflctn.spe'))
+    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180625 WS2_1_1 (2) rflctn.spe'))
     wavelengths = data[0]
     intensities = data[1]
 
@@ -270,5 +271,5 @@ if __name__ == '__main__':
     figure.suptitle('Spectra')
 
     plot_all(wavelengths, intensities)
-    print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
+    #print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
     plt.show()
