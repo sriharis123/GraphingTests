@@ -117,18 +117,14 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c = 450, ws2b =
     return maxes
 
 
-def find_index(x, point, exact=False):
+def find_index(x, point):
     """
     Finds the index of a certain wavelength using the np.where() function
     :param x: Array of wavelengths
     :param point: The wavelength to search for
-    :param exact: Whether an exact value is being searched for (if not, a rounded value will be searched)
     :return: the index of the wavelength
     """
-    if exact:
-        r = np.where(x == point)[0]
-    else:
-        r = np.where(np.round(x, decimals=0) == round(point))[0]
+    r = np.where(np.round(x, decimals=0) == round(point))[0]
     # print("Where" + str(r))
     return int(np.average(r))
 
