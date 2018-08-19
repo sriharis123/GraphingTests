@@ -117,45 +117,6 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c = 450, ws2b =
     return maxes
 
 
-def find_local_maxes_wse2(wavelength, intensity, pradius=20):
-    """
-    Finds local maxes for WSE2 spectra by first assuming the initial location of the maxes.
-    :param wavelength: Numpy array of wavelengths, in nanometers
-    :param intensity: Numpy array of intensities
-    :param pradius: a radius of pradius nanometers around an assumed position where a peak will be
-    :return: a numpy array of peaks
-    """
-    maxes = np.array([0])
-    # Assumed positions for peaks:
-    wse2bp = 485
-    wse2ap = 575
-    wse2b = 610
-    wse2a = 760
-    start_index = find_index(wavelength, wse2bp - pradius)
-    stop_index = find_index(wavelength, wse2bp + pradius)
-    locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
-
-    start_index = find_index(wavelength, wse2ap - pradius)
-    stop_index = find_index(wavelength, wse2ap + pradius)
-    locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
-
-    start_index = find_index(wavelength, wse2b - pradius)
-    stop_index = find_index(wavelength, wse2b + pradius)
-    locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
-
-    start_index = find_index(wavelength, wse2a - pradius)
-    stop_index = find_index(wavelength, wse2a + pradius)
-    locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index - 1)
-
-    maxes = np.delete(maxes, [0])
-    print('find_local_maxes_wse2(): ' + str(maxes))
-    return maxes
-
-
 def find_index(x, point, exact=False):
     """
     Finds the index of a certain wavelength using the np.where() function
