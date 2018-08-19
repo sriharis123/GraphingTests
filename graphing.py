@@ -3,6 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from os import path as path
 import time
+import smoothen
 
 
 def plot_all(x, y):
@@ -12,7 +13,7 @@ def plot_all(x, y):
     :param y: List of y-axis points
     :return: N/A
     """
-    yprime = savitzky_golay(y, 31, 10, 0)
+    yprime = smoothen.savitzky_golay(y, 31, 10, 0)
     plot_annotate(x, y, graph_1, np.ndarray.tolist(find_local_maxes(x, y)),
                   plot_name='LMaxNorm')
     plot_annotate(x, yprime, graph_2, np.ndarray.tolist(find_local_maxes(x, yprime)),
@@ -76,37 +77,39 @@ def find_local_maxes(x, y, pradius=200):
     return maxes
 
 
-def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40):
+def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c = 450, ws2b = 525, ws2a = 625):
     """
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
     :param intensity: Numpy array of intensities
     :param pradiusnm: a radius of pradius nanometers around an assumed position where a peak will be
+    :param ws2c:
+    :param ws2b:
+    :param ws2a:
     :return: a numpy array of peaks
     """
     starttime = time.time()
     maxes = np.array([0])
     # Assumed positions for peaks:
-    ws2c = 450
-    ws2b = 525
-    ws2a = 625
+
 
     start_index = find_index(wavelength, ws2c - pradiusnm if ws2c - pradiusnm > ws2c else ws2c)    # where to start searching for a peak (index)
     stop_index = find_index(wavelength, ws2c + pradiusnm)     # where to stop searching for a peak (index)
     area = wavelengths[start_index:stop_index]
     locus = intensity[start_index:stop_index]                 # array that represents where the peak is
-    maxes = np.append(maxes, find_local_maxes(area, locus, 60) + start_index)
+    maxes = np.append(maxes, np.argmax(locus) + start_index)
+    # maxes = np.append(maxes, find_local_maxes(area, locus, 60) + start_index)
     # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
     start_index = find_index(wavelength, ws2b - pradiusnm)
     stop_index = find_index(wavelength, ws2b + pradiusnm)
     locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index)
+    maxes = np.append(maxes, np.argmax(locus) + start_index)
 
     start_index = find_index(wavelength, ws2a - pradiusnm)
     stop_index = find_index(wavelength, ws2a + pradiusnm)
     locus = intensity[start_index:stop_index]
-    maxes = np.append(maxes, find_index(locus, np.amax(locus), exact=True) + start_index)
+    maxes = np.append(maxes, np.argmax(locus) + start_index)
 
     maxes = np.delete(maxes, [0])
     print('find_local_maxes_ws2(): ' + str(maxes))
@@ -177,86 +180,12 @@ def find_exciton_peak_distance_ws2(wavelength, intensity):
     :return: A numpy array of distances in nm where [0] is the distance between C and B, [1] is the distance between
     B and A, and [2] is the distance between A and C
     """
-    maxes = find_local_maxes_ws2(wavelength, savitzky_golay(intensity, 31, 10, 0))
+    maxes = find_local_maxes_ws2(wavelength, smoothen.savitzky_golay(intensity, 31, 10, 0))
     return np.array([maxes[1]-maxes[0], maxes[2]-maxes[1], maxes[2]-maxes[0]])
 
 
-# http://scipy-cookbook.readthedocs.io/items/SavitzkyGolay.html
-def savitzky_golay(y, window_size, order, deriv=0, rate=1):
-    """Smooth (and optionally differentiate) data with a Savitzky-Golay filter.
-    The Savitzky-Golay filter removes high frequency noise from data.
-    It has the advantage of preserving the original shape and
-    features of the signal better than other types of filtering
-    approaches, such as moving averages techniques.
-    Parameters
-    ----------
-    y : array_like, shape (N,)
-        the values of the time history of the signal.
-    window_size : int
-        the length of the window. Must be an odd integer number.
-    order : int
-        the order of the polynomial used in the filtering.
-        Must be less then `window_size` - 1.
-    deriv: int
-        the order of the derivative to compute (default = 0 means only smoothing)
-    Returns
-    -------
-    ys : ndarray, shape (N)
-        the smoothed signal (or it's n-th derivative).
-    Notes
-    -----
-    The Savitzky-Golay is a type of low-pass filter, particularly
-    suited for smoothing noisy data. The main idea behind this
-    approach is to make for each point a least-square fit with a
-    polynomial of high order over a odd-sized window centered at
-    the point.
-    Examples
-    --------
-    t = np.linspace(-4, 4, 500)
-    y = np.exp( -t**2 ) + np.random.normal(0, 0.05, t.shape)
-    ysg = savitzky_golay(y, window_size=31, order=4)
-    import matplotlib.pyplot as plt
-    plt.plot(t, y, label='Noisy signal')
-    plt.plot(t, np.exp(-t**2), 'k', lw=1.5, label='Original signal')
-    plt.plot(t, ysg, 'r', label='Filtered signal')
-    plt.legend()
-    plt.show()
-    References
-    ----------
-    .. [1] A. Savitzky, M. J. E. Golay, Smoothing and Differentiation of
-       Data by Simplified Least Squares Procedures. Analytical
-       Chemistry, 1964, 36 (8), pp 1627-1639.
-    .. [2] Numerical Recipes 3rd Edition: The Art of Scientific Computing
-       W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
-       Cambridge University Press ISBN-13: 9780521880688
-    """
-    import numpy as np
-    from math import factorial
-
-    try:
-        window_size = np.abs(np.int(window_size))
-        order = np.abs(np.int(order))
-    except ValueError as msg:
-        raise ValueError("window_size and order have to be of type int")
-    if window_size % 2 != 1 or window_size < 1:
-        raise TypeError("window_size size must be a positive odd number")
-    if window_size < order + 2:
-        raise TypeError("window_size is too small for the polynomials order")
-    order_range = range(order+1)
-    half_window = (window_size - 1) // 2
-    # precompute coefficients
-    b = np.mat([[k**i for i in order_range] for k in range(-half_window, half_window+1)])
-    m = np.linalg.pinv(b).A[deriv] * rate**deriv * factorial(deriv)
-    # pad the signal at the extremes with
-    # values taken from the signal itself
-    firstvals = y[0] - np.abs(y[1:half_window+1][::-1] - y[0])
-    lastvals = y[-1] + np.abs(y[-half_window-1:-1][::-1] - y[-1])
-    y = np.concatenate((firstvals, y, lastvals))
-    return np.convolve(m[::-1], y, mode='valid')
-
-
 if __name__ == '__main__':
-    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180625 WS2_1_1 (2) rflctn.spe'))
+    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180404 WS2_1 a.spe'))
     wavelengths = data[0]
     intensities = data[1]
 
