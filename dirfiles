@@ -1,0 +1,13 @@
+import os
+
+
+def files_in_directory(path="C:"):
+    return os.listdir(path)
+
+
+def file_names_in_directory(path="C:"):
+    final = []
+    for file in os.listdir(path):
+        print(file)
+        final.append(file[0:file.index('.')])
+    return final
