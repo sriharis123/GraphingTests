@@ -2,6 +2,7 @@ import loadSPEfiles as lf
 import numpy as np
 from matplotlib import pyplot as plt
 from os import path as path
+from os import listdir
 import time
 import smoothen
 
@@ -20,7 +21,7 @@ def plot_all(x, y):
                   plot_name='LMaxSG', color='r')
     plot_annotate(x, yprime, graph_3, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)),
                   plot_name='LMaxSG_WS2', color='r')
-
+    # last one doesnt work for awk peaks
 
 def plot_annotate(x, y, graph_location, maxes, plot_name='Unnamed', color='b'):
     """
@@ -47,7 +48,7 @@ def find_local_maxes(x, y, pradius=200):
     :param pradius: A peak will occur in +-pradius of a certain point.
     :return: A numpy array of each max's x-axis point
     """
-    starttime = time.time()
+    # starttime = time.time()
     maxes = np.array([0])
     peak_radius = pradius       # checks if this is the greatest value in 200 data points [~20 nanometers]
     r = 200
@@ -73,7 +74,7 @@ def find_local_maxes(x, y, pradius=200):
             r += 1
     maxes = np.delete(maxes, [0])
     print('find_local_maxes(): ' + str(maxes))
-    print('find_local_maxes(): ' + str(round((time.time() - starttime) * 1000, 4)) + ' ms')
+    # print('find_local_maxes(): ' + str(round((time.time() - starttime) * 1000, 4)) + ' ms')
     return maxes
 
 
@@ -88,7 +89,7 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c = 450, ws2b =
     :param ws2a:
     :return: a numpy array of peaks
     """
-    starttime = time.time()
+    # starttime = time.time()
     maxes = np.array([0])
     # Assumed positions for peaks:
 
@@ -97,8 +98,8 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c = 450, ws2b =
     stop_index = find_index(wavelength, ws2c + pradiusnm)     # where to stop searching for a peak (index)
     area = wavelengths[start_index:stop_index]
     locus = intensity[start_index:stop_index]                 # array that represents where the peak is
-    maxes = np.append(maxes, np.argmax(locus) + start_index)
-    # maxes = np.append(maxes, find_local_maxes(area, locus, 60) + start_index)
+    # maxes = np.append(maxes, np.argmax(locus) + start_index)
+    maxes = np.append(maxes, find_local_maxes(area, locus, 60) + start_index)
     # find the index of the peak in the new array and add it to the start index, and add it all to maxes
 
     start_index = find_index(wavelength, ws2b - pradiusnm)
@@ -113,7 +114,7 @@ def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c = 450, ws2b =
 
     maxes = np.delete(maxes, [0])
     print('find_local_maxes_ws2(): ' + str(maxes))
-    print('find_local_maxes_ws2(): ' + str(round((time.time() - starttime) * 1000, 4)) + ' ms')
+    # print('find_local_maxes_ws2(): ' + str(round((time.time() - starttime) * 1000, 4)) + ' ms')
     return maxes
 
 
@@ -142,20 +143,18 @@ def find_exciton_peak_distance_ws2(wavelength, intensity):
 
 
 if __name__ == '__main__':
-    data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', '20180404 WS2_1 a.spe'))
-    wavelengths = data[0]
-    intensities = data[1]
+    full_list = []
+    for filename in listdir('D:\Python Projects\GraphingTests\Data\WS2 reflection spectra[130]\WS2 reflection spectra'):
+        data = lf.load(path.join('Data\WS2 reflection spectra[130]\WS2 reflection spectra', filename))
+        wavelengths = data[0]
+        intensities = data[1]
 
-    wavelengths = np.array(wavelengths)
-    intensities = np.array(intensities)
-    '''
-    print('Wavelength\t\t\t\tIntensity')
-    for i in range(0, wavelengths.size):
-        print(str(wavelengths[i]) + '\t\t' + str(intensities[i]))
-    '''
-    figure, (graph_1, graph_2, graph_3) = plt.subplots(1, 3, sharey=True)
-    figure.suptitle('Spectra')
+        wavelengths = np.array(wavelengths)
+        intensities = np.array(intensities)
 
-    plot_all(wavelengths, intensities)
-    #print('Distances: ' + str(find_exciton_peak_distance_ws2(wavelengths, intensities)))
-    plt.show()
+        figure, (graph_1, graph_2, graph_3) = plt.subplots(1, 3, sharey=True)
+        figure.suptitle('Spectra')
+
+        plot_all(wavelengths, intensities)
+        plt.show(block=False)
+        layers = input("Enter the # of layers in this spectrum:")
