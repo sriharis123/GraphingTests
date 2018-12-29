@@ -3,7 +3,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from os import path as path
 from os import listdir
-import time
 import smoothen
 
 
@@ -22,6 +21,7 @@ def plot_all(x, y):
     plot_annotate(x, yprime, graph_3, np.ndarray.tolist(find_local_maxes_ws2(x, yprime)),
                   plot_name='LMaxSG_WS2', color='r')
     # last one doesnt work for awk peaks
+
 
 def plot_annotate(x, y, graph_location, maxes, plot_name='Unnamed', color='b'):
     """
@@ -78,7 +78,7 @@ def find_local_maxes(x, y, pradius=200):
     return maxes
 
 
-def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c = 450, ws2b = 525, ws2a = 625):
+def find_local_maxes_ws2(wavelength, intensity, pradiusnm=40, ws2c=450, ws2b=525, ws2a=625):
     """
     Finds local maxes for WS2 spectra by first assuming the initial location of the maxes.
     :param wavelength: Numpy array of wavelengths, in nanometers
@@ -155,6 +155,15 @@ if __name__ == '__main__':
         figure, (graph_1, graph_2, graph_3) = plt.subplots(1, 3, sharey=True)
         figure.suptitle('Spectra')
 
-        plot_all(wavelengths, intensities)
-        plt.show(block=False)
-        layers = input("Enter the # of layers in this spectrum:")
+        try:
+            plot_all(wavelengths, intensities)
+        except:
+            continue
+        plt.show()
+
+        layers = int(input("Enter the # of layers in this spectrum; type \'0\' or lower to skip:"))
+        if layers <= 0:
+            continue
+        else:
+            full_list.append([filename, layers])
+
